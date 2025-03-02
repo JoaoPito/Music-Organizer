@@ -37,17 +37,17 @@ def main():
     parser = argparse.ArgumentParser(description='Organize music directories by initial letter.')
     parser.add_argument('input_path', type=Path, help='Path to the input directory containing music subdirectories.')
     parser.add_argument('output_path', type=Path, help='Path to the output directory where grouped directories will be created.')
-    parser.add_argument('--target_group_size', type=int, default=20, help='Target size for each group of directories.')
+    parser.add_argument('--max_size', type=int, default=20, help='Target size for each group of directories.')
     
     args = parser.parse_args()
     
     input_path = args.input_path
     output_path = args.output_path
-    target_group_size = args.target_group_size
+    max_group_size = args.max_size
     
     subdirs = get_list_of_subdirectories(input_path)
     letter_counts = get_first_letter_counts(subdirs)
-    groups = group_by_frequency(letter_counts, target_group_size=target_group_size)
+    groups = group_by_frequency(letter_counts, target_group_size=max_group_size)
     
     if len(groups) <= 1 or groups[0][1] == 0:
         print(f"Could not make any groups\n{groups}")
