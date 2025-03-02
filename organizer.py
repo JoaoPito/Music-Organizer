@@ -31,7 +31,7 @@ def group_directories_by_initial(subdirs: list[Path],
         for subdir in subdirs:
             if subdir.name[0].upper() in [i.upper() for i in group_initials]:
                 subdir.rename(group_dir_path / subdir.name)
-                print(f"Moved '{subdir}' to '{group_dir_path / subdir.name}'")
+                print(f"📁 Moved '{subdir}' to '{group_dir_path / subdir.name}'")
 
 def main():
     parser = argparse.ArgumentParser(description='Organize music directories by initial letter.')
