@@ -1,8 +1,10 @@
 from pathlib import Path
 import argparse
 
-def get_list_of_subdirectories(path: Path):
-    return [subdir for subdir in path.iterdir() if subdir.is_dir()]
+def get_list_of_contents(path: Path, include_files=True):
+    contents = [subdir for subdir in path.iterdir() if subdir.is_dir()]
+    files = [file for file in path.iterdir() if file.is_file()] if include_files else []
+    return contents + files
 
 def get_first_letter_counts(pathlist: list[Path]):
     initials = [subdir.name[0].upper() for subdir in pathlist]
@@ -38,18 +40,19 @@ def main():
     parser.add_argument('input_path', type=Path, help='Path to the input directory containing music subdirectories.')
     parser.add_argument('output_path', type=Path, help='Path to the output directory where grouped directories will be created.')
     parser.add_argument('--max_size', type=int, default=20, help='Target size for each group of directories.')
-    
+    parser.add_argument('--copy_files', '-f', action='store_true', help='Flag to copy files in the input root to output directory.')
     args = parser.parse_args()
     
     input_path = args.input_path
     output_path = args.output_path
     max_group_size = args.max_size
+    copy_files = args.copy_files
     
-    subdirs = get_list_of_subdirectories(input_path)
+    subdirs = get_list_of_contents(input_path, include_files=copy_files)    
     letter_counts = get_first_letter_counts(subdirs)
     groups = group_by_frequency(letter_counts, target_group_size=max_group_size)
     
-    if len(groups) <= 1 or groups[0][1] == 0:
+    if len(groups) < 1 or groups[0][1] == 0:
         print(f"Could not make any groups\n{groups}")
         return
     
